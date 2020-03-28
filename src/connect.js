@@ -1,11 +1,11 @@
-const fs = require('fs');
+const fs = require("fs");
 
-const Koa = require('koa');
-const koaJwt = require('koa-jwt');
-const jsonWebToken = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
+const Koa = require("koa");
+const koaJwt = require("koa-jwt");
+const jsonWebToken = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
-const config = require('../config.json');
+const config = require("../config.json");
 
 const app = new Koa();
 
@@ -17,20 +17,20 @@ app.use(async (ctx) => {
 
   var promises = [];
 
-  for (i = 0; i < config.keys.length; i++) {
-    promises.push(new Promise((resolve, reject) => {
-      if (bcrypt.compareSync(ctx.request.body.key, config.keys[i].hash))
-        resolve(config.keys[i].roles);
-      else
-        resolve(false);
-    }));
+  for (var i = 0; i < config.keys.length; i++) {
+    try {
+      promises.push(bcrypt.compareSync(ctx.request.body.key, config.keys[i].hash));
+    } catch {
+      promises.push(null);
+      ctx.status = 500;
+    }
   }
   
   var v = await Promise.all(promises);
-  for (i = 0; i < v.length; i++) {
-    if (v[i] != false) {
+  for (var i = 0; i < v.length; i++) {
+    if (v[i]) {
       ctx.body = {
-        token: jsonWebToken.sign({data: { roles: config.keys[i] }}, 'secret')
+        token: jsonWebToken.sign({data: { roles: config.keys[i] }}, config.secret)
       };
       return;
     }

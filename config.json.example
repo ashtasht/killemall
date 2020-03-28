@@ -10,6 +10,7 @@
       "roles": ["get"]
     }
   ],
+  "secret": "I have a crush on Cortana",
   "db": {
     "host": "localhost",
     "user: "yetzel",

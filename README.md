@@ -22,6 +22,8 @@ or with [https://bcrypt-generator.com/](https://bcrypt-generator.com/).
 
 You can set the roles you want for each key.
 
+You need to specify a random `secret` under `"secret"`.
+
 As for the database, you need to use MySQL, make a new database (and a user identified with a native MySQL password) and fill the appropriate data under `"db"`. Create a new table using
 ```sql
 CREATE TABLE entries(

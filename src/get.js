@@ -1,9 +1,9 @@
-const Koa = require('koa');
-const bcrypt = require('bcrypt');
-const aes256 = require('aes256');
-const mysql = require('mysql');
+const Koa = require("koa");
+const bcrypt = require("bcrypt");
+const aes256 = require("aes256");
+const mysql = require("mysql");
 
-const config = require('../config.json');
+const config = require("../config.json");
 
 const app = new Koa();
 
@@ -24,17 +24,14 @@ app.use(async (ctx) => {
           const q = "SELECT body FROM entries WHERE title = ?";
           connection.query(q, hash, (error, results, fields) => {
             if (error) {
-              if (process.env.NODE_ENV == 'dev')
-                console.log(error);
               ctx.status = 500;
             } else {
-              const body = results[0].body;
-  
-              if (!body)
+              if (!results[0].body) {
                 ctx.body = { body: "" };
-              else
-                ctx.body = { body: aes256.decrypt(ctx.request.body.title, body.toString()) };
-  
+              } else {
+                ctx.body = { body: aes256.decrypt(ctx.request.body.title, results[0].body.toString()) };
+              }
+
               ctx.status = 200;
               resolve();
             }

@@ -1,3 +1,5 @@
-const koaJwt = require('koa-jwt');
+const koaJwt = require("koa-jwt");
 
-module.exports = koaJwt({ secret: 'secret' });
+const config = require("../config.json");
+
+module.exports = koaJwt({ secret: config.secret });

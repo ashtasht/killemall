@@ -1,9 +1,9 @@
-const Koa = require('koa');
-const bcrypt = require('bcrypt');
-const aes256 = require('aes256');
-const mysql = require('mysql');
+const Koa = require("koa");
+const bcrypt = require("bcrypt");
+const aes256 = require("aes256");
+const mysql = require("mysql");
 
-const config = require('../config.json');
+const config = require("../config.json");
 
 const app = new Koa();
 
@@ -19,16 +19,19 @@ app.use(async (ctx) => {
         return;
       }
       
-      bcrypt.hash(ctx.request.body.title, config.salt, (err, hash) => {
-        const body = aes256.encrypt(ctx.request.body.title, ctx.request.body.body);
-        const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
-        connection.query(q, [{ title: hash, body: body }, body], (error, results, fields) => {
-          if (error) {
-            if (process.env.NODE_ENV == 'dev') console.log(error);
-            ctx.status = 500;
-          } else {
-            ctx.status = 200;
-          }
+      await new Promise((resolve, reject) => {
+        bcrypt.hash(ctx.request.body.title, config.salt, (err, hash) => {
+          const body = aes256.encrypt(ctx.request.body.title, ctx.request.body.body);
+
+          const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
+          connection.query(q, [{ title: hash, body: body }, body], (error, results, fields) => {
+            if (error) {
+              reject();
+            } else {
+              ctx.status = 200;
+              resolve();
+            }
+          });
         });
       });
     } else {
