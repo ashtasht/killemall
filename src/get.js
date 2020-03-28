@@ -9,13 +9,13 @@ const app = new Koa();
 
 // Connect to the database
 var connection;
-mysql.createConnection(config.db).then((c) => { connection = c; });
+mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch((err) => console.log(`Error establishing connection to the database:\n${err}`));
 
 app.use(async (ctx) => {
   try {
     if (!ctx.state.user.data.roles.roles.includes("get")) {
       ctx.status = 403;
-      return
+      return;
     }
 
     if (!ctx.request.body.title) {

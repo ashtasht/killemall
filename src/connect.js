@@ -1,7 +1,4 @@
-const fs = require("fs");
-
 const Koa = require("koa");
-const koaJwt = require("koa-jwt");
 const jsonWebToken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -27,7 +24,7 @@ app.use(async (ctx) => {
   }
   
   var v = await Promise.all(promises);
-  for (var i = 0; i < v.length; i++) {
+  for (i = 0; i < v.length; i++) {
     if (v[i]) {
       ctx.body = {
         token: jsonWebToken.sign({data: { roles: config.keys[i] }}, config.secret)

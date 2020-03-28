@@ -9,7 +9,7 @@ const app = new Koa();
 
 // Connect to the database
 var connection;
-mysql.createConnection(config.db).then((c) => { connection = c; });
+mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch((err) => console.log(`Error establishing connection to the database:\n${err}`));
 
 app.use(async (ctx) => {
   try {
@@ -28,7 +28,7 @@ app.use(async (ctx) => {
     
 
     const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
-    const results = await connection.query(q, [{ title: hash, body: body }, body]);
+    await connection.query(q, [{ title: hash, body: body }, body]);
 
     ctx.status = 200;
     return;
