@@ -22,7 +22,7 @@ or with [https://bcrypt-generator.com/](https://bcrypt-generator.com/).
 
 You can set the roles you want for each key.
 
-As for the database, you need to use MySQL, make a new database (and user identified with a native MySQL password) and fill the appropriate data under `"db"`. Create a new table using
+As for the database, you need to use MySQL, make a new database (and a user identified with a native MySQL password) and fill the appropriate data under `"db"`. Create a new table using
 ```sql
 CREATE TABLE entries(
   title BINARY(60) NOT NULL UNIQUE,
@@ -46,6 +46,6 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_t
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_token>" http://localhost:5120/get --data '{"title":"<entry_title>"}'
 ```
 ## A Few More Things
- - This project is a hobby, and so it might have security leaks which I'm unaware of.
+ - This project is a hobby, so it might have security leaks which I'm unaware of.
  - Killemall uses port 5120 by defualt, you can change it by setting the `PORT` enviroment variable.
  - Yes, "Killemall" and 5120 is a reference to Metallica.
