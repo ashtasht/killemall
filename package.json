@@ -25,6 +25,6 @@
     "koa-jwt": "^3.6.0",
     "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
-    "mysql": "^2.18.1"
+    "promise-mysql": "^4.1.3"
   }
 }
