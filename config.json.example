@@ -1,0 +1,19 @@
+{
+  "salt": "bcrypt salt",
+  "keys": [
+    {
+      "hash": "bcrypt the salt and the key",
+      "roles": ["get", "set"]
+    },
+    {
+      "hash": "bcrypt of salt + key",
+      "roles": ["get"]
+    }
+  ],
+  "db": {
+    "host": "localhost",
+    "user: "yetzel",
+    "password": "ki11_th3_mall!",
+    "database": "kea"
+  }
+}
