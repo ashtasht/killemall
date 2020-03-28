@@ -1,4 +1,7 @@
 # killemall
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6a4c685b66a448528e6e1d4e60c666d6)](https://app.codacy.com/manual/amitgoren12/killemall?utm_source=github.com&utm_medium=referral&utm_content=AmitGoren/killemall&utm_campaign=Badge_Grade_Dashboard)
+
 A simple server for accessing and writing encrypted data only if the title is known.
 
 > :warning: Right now there is no support for https and JWT token expiration. I will add both tomorrow (29/3/2020).
