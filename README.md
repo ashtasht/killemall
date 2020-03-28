@@ -1,5 +1,5 @@
 # killemall
-A simple server for accessing and writing encrypted data only if the title is known.
+A simple server for accessing and writing encrypted data only if the title is known. It contains only 122 lines of code!
 
 > :warning: Right now there is no support for https and JWT token expiration. I will add both tomorrow (29/3/2020).
 
