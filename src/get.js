@@ -13,14 +13,19 @@ mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch
 
 app.use(async (ctx) => {
   try {
-    if (!ctx.state.user.data.roles.roles.includes("get")) {
+    if (ctx.state.user.expiration < Date.now() / 1000) {
+      ctx.status = 401;
+      return;
+    }
+
+    if (!ctx.state.user.roles.includes("get")) {
       ctx.status = 403;
       return;
     }
 
     if (!ctx.request.body.title) {
-        ctx.status = 400;
-        return;
+      ctx.status = 400;
+      return;
     }
 
     var hash = await bcrypt.hash(ctx.request.body.title, config.salt);

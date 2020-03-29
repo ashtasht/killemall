@@ -1,7 +1,7 @@
 # killemall
-A simple server for accessing and writing encrypted data only if the title is known. It contains only 120 lines of code!
+A simple server for accessing and writing encrypted data only if the title is known. It contains only 127 lines of code!
 
-> :warning: Right now there is no support for https and JWT token expiration. I will add both tomorrow (29/3/2020).
+> :warning: Right now there is no support for https. I will add both tomorrow (29/3/2020).
 
 ## How it works
 Killemall works by encrypting (AES256) the body of each entry with its original title, and instead of storing the original title in the database - storing the hash (BCrypt) of it. Thus, an entry can be accessed only if the title is already known, and the titles themselves cannot be listed (they are hashed).
@@ -48,6 +48,6 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_t
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_token>" http://localhost:5120/get --data '{"title":"<entry_title>"}'
 ```
 ## A Few More Things
-- This project is a hobby, so it might have security leaks which I'm unaware of.
-- Killemall uses port 5120 by defualt, you can change it by setting the `PORT` enviroment variable.
-- Yes, "Killemall" and 5120 is a reference to Metallica.
+ - This project is a hobby, so it might have security leaks which I'm unaware of.
+ - Killemall uses port 5120 by defualt, you can change it by setting the `PORT` enviroment variable.
+ - Yes, "Killemall" and 5120 is a reference to Metallica.

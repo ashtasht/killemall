@@ -23,16 +23,23 @@ app.use(async (ctx) => {
     }
   }
   
+  // Compare all the keys at once
   var v = await Promise.all(promises);
+
+  // Find the key used
   for (i = 0; i < v.length; i++) {
     if (v[i]) {
       ctx.body = {
-        token: jsonWebToken.sign({data: { roles: config.keys[i] }}, config.secret)
+        token: jsonWebToken.sign({
+          roles: config.keys[i].roles,
+          expiration: Math.floor(Date.now() / 1000 + config.keys[i].expiration)
+          }, config.secret)
       };
       return;
     }
   }
-  ctx.status = 401;
+
+  ctx.status = 401;  // Invalid key if no compitable key was found
 });
 
 module.exports = app;

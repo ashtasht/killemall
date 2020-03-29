@@ -3,10 +3,12 @@
   "keys": [
     {
       "hash": "bcrypt the salt and the key",
+      "expiration": 900,
       "roles": ["get", "set"]
     },
     {
       "hash": "bcrypt of salt + key",
+      "expiration": 3600,
       "roles": ["get"]
     }
   ],

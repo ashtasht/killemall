@@ -11,7 +11,6 @@ const koaBody = require("koa-body");
 const getRoute = require("./get.js");
 const setRoute = require("./set.js");
 const connRoute = require("./connect.js");
-const jwt = require("./jwt.js");
 
 const config = require("../config.json");
 
@@ -25,7 +24,7 @@ app.use(koaBody());
 
 app.use(mount("/conn", connRoute));
 
-app.use(jwt);
+app.use(koaJwt({ secret: config.secret }));
 
 app.use(mount("/get", getRoute));
 app.use(mount("/set", setRoute));

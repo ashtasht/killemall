@@ -13,7 +13,12 @@ mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch
 
 app.use(async (ctx) => {
   try {
-    if (!ctx.state.user.data.roles.roles.includes("set")) {
+    if (ctx.state.user.expiration < Date.now() / 1000) {
+      ctx.status = 401;
+      return;
+    }
+
+    if (!ctx.state.user.roles.includes("set")) {
       ctx.status = 403;
       return;
     }
@@ -25,7 +30,6 @@ app.use(async (ctx) => {
 
     var hash = await bcrypt.hash(ctx.request.body.title, config.salt);
     const body = aes256.encrypt(ctx.request.body.title, ctx.request.body.body);
-    
 
     const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
     await connection.query(q, [{ title: hash, body: body }, body]);
