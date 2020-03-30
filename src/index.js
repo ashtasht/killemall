@@ -14,10 +14,12 @@ const connRoute = require("./connect.js");
 
 const config = require("../config.json");
 
-const httpsOptions = {
-  key: fs.readFileSync(config.ssl.key),
-  cert: fs.readFileSync(config.ssl.cert)
-};
+var httpsOptions;
+if (config.ssl.ssl)
+  httpsOptions = {
+    key: fs.readFileSync(config.ssl.key),
+    cert: fs.readFileSync(config.ssl.cert)
+  };
 
 const app = new Koa();
 
