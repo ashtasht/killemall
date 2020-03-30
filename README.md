@@ -25,14 +25,14 @@ or with [https://bcrypt-generator.com/](https://bcrypt-generator.com/).
 #### Roles and key Expiration
 You should set the roles you want for each key. You can also set an expiration time for each key in seconds using `"expiration"`.
 
-## Other configuration options
+### Other configuration options
 You just need to specify a random string under `"secret"`.
 
 You need to specify a hostname under `"hostname"`.
 
 If you want to use SSL (which you really should), set `ssl.ssl` to true and put the paths of your key and certificate under `ssl.key` and `ssl.cert`.
 
-## Setting up the database
+### Setting up the database
 As for the database, you need to use MySQL, make a new database (and a user identified with a native MySQL password) and fill the appropriate data under `"db"`. Create a new table using
 ```sql
 CREATE TABLE entries(
