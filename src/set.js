@@ -14,16 +14,19 @@ mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch
 app.use(async (ctx) => {
   try {
     if (ctx.state.user.expiration && ctx.state.user.expiration < Date.now() / 1000) {
+      ctx.body = { "name": "Unauthorized", "code": 401, "message": "Token expired." };
       ctx.status = 401;
       return;
     }
 
     if (!ctx.state.user.roles.includes("set")) {
+      ctx.body = { "name": "Forbidden", "code": 403, "message": "Access deniend to role 'get'." };
       ctx.status = 403;
       return;
     }
 
     if (!ctx.request.body.title || !ctx.request.body.body) {
+      ctx.body = { "name": "Bad Request", "code": 400, "message": "Title and body were not specified in the query's body." };
       ctx.status = 400;
       return;
     }
@@ -37,6 +40,8 @@ app.use(async (ctx) => {
     ctx.status = 200;
     return;
   } catch (e) {
+    if (process.env.NODE_ENV === "dev") console.log(e);
+    ctx.body = { "name": "Internal Server Error", "code": 500, "message": "Internal server error." };
     ctx.status = 500;
   }
 });

@@ -24,7 +24,7 @@ const app = new Koa();
 
 app.use(helmet());
 
-if (process.env.NODE_ENV === "dev") pp.use(logger());
+if (process.env.NODE_ENV === "dev") app.use(logger());
 
 app.use(koaBody());
 
@@ -37,4 +37,6 @@ app.use(mount("/set", setRoute));
 
 // Run the server using https only
 const port = process.env.PORT || 5120;
-https.createServer(httpsOptions, app.callback()).listen(port);
+console.log("Running on port " + port);
+// app.listen(port); // http (not recommended)
+https.createServer(httpsOptions, app.callback()).listen(port); // https

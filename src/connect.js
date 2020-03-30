@@ -19,6 +19,8 @@ app.use(async (ctx) => {
       promises.push(bcrypt.compareSync(ctx.request.body.key, config.keys[i].hash));
     } catch {
       promises.push(null);
+
+      ctx.body = { "name": "Internal Server Error", "code": 500, "message": "Cannot compare the hash of some key." };
       ctx.status = 500;
     }
   }
@@ -40,7 +42,9 @@ app.use(async (ctx) => {
     }
   }
 
-  ctx.status = 401;  // Invalid key if no compitable key was found
+  // Invalid key
+  ctx.body = { "name": "Unauthorized", "code": 401, "message": "Invalid key." };
+  ctx.status = 401;
 });
 
 module.exports = app;

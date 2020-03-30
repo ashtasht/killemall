@@ -14,16 +14,19 @@ mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch
 app.use(async (ctx) => {
   try {
     if (ctx.state.user.expiration && ctx.state.user.expiration < Date.now() / 1000) {
+      ctx.body = { "name": "Unauthorized", "code": 401, "message": "Token expired." };
       ctx.status = 401;
       return;
     }
 
     if (!ctx.state.user.roles.includes("get")) {
+      ctx.body = { "name": "Forbidden", "code": 403, "message": "Access deniend to role 'get'." };
       ctx.status = 403;
       return;
     }
 
     if (!ctx.request.body.title) {
+      ctx.body = { "name": "Bad Request", "code": 400, "message": "Title was not specified in the query's body." };
       ctx.status = 400;
       return;
     }
@@ -33,7 +36,7 @@ app.use(async (ctx) => {
     const q = "SELECT body FROM entries WHERE title = ?";
     const results = await connection.query(q, hash);
 
-    if (!results[0].body) {
+    if (!results[0]) {
       ctx.body = { body: "" };
     } else {
       ctx.body = { body: aes256.decrypt(ctx.request.body.title, results[0].body.toString()) };
@@ -42,6 +45,8 @@ app.use(async (ctx) => {
     ctx.status = 200;
     return;
   } catch (e) {
+    if (process.env.NODE_ENV === "dev") console.log(e);
+    ctx.body = { "name": "Internal Server Error", "code": 500, "message": "Internal server error." };
     ctx.status = 500;
   }
 });
