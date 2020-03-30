@@ -15,7 +15,6 @@ const connRoute = require("./connect.js");
 const config = require("../config.json");
 
 const httpsOptions = {
-  hostname: config.hostname,
   key: fs.readFileSync(config.ssl.key),
   cert: fs.readFileSync(config.ssl.cert)
 };
@@ -37,6 +36,6 @@ app.use(mount("/set", setRoute));
 
 // Run the server using https only
 const port = process.env.PORT || 5120;
-console.log("Running on port " + port);
-// app.listen(port); // http (not recommended)
-https.createServer(httpsOptions, app.callback()).listen(port); // https
+console.log(`Running on ${config.hostname}:${port}`);
+if (config.ssl.ssl) https.createServer(httpsOptions, app.callback()).listen(port, config.hostname); // https
+else app.listen(port, config.hostname); // http

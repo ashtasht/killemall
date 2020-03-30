@@ -22,7 +22,9 @@ You should set the roles you want for each key. You can also set an expiration t
 
 You need to specify a random `secret` under `"secret"`.
 
-You need to specify a hostname (you can leave it blank), and the paths of your key and certificate under `ssl.key` and `ssl.cert`.
+You need to specify a hostname under `"hostname"`.
+
+If you want to use SSL (which you really should), set `ssl.ssl` to true and put the paths of your key and certificate under `ssl.key` and `ssl.cert`.
 
 As for the database, you need to use MySQL, make a new database (and a user identified with a native MySQL password) and fill the appropriate data under `"db"`. Create a new table using
 ```sql

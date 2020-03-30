@@ -18,8 +18,9 @@
     "password": "ki11_th3_mall!",
     "database": "kea"
   },
+  "hostname": "downloadmoreram.com",
   "ssl": {
-    "hostname": "downloadmoreram.com",
+    "ssl": true,
     "key": "key.pem",
     "cert": "certificate.cert"
   }
