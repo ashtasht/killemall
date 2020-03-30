@@ -1,7 +1,5 @@
 # killemall
-A simple server for accessing and writing encrypted data only if the title is known. It contains only 127 lines of code!
-
-> :warning: Right now there is no support for https. I will add both tomorrow (29/3/2020).
+A simple server for accessing and writing encrypted data only if the title is known. It contains only 132 lines of code!
 
 ## How it works
 Killemall works by encrypting (AES256) the body of each entry with its original title, and instead of storing the original title in the database - storing the hash (BCrypt) of it. Thus, an entry can be accessed only if the title is already known, and the titles themselves cannot be listed (they are hashed).
@@ -23,6 +21,8 @@ or with [https://bcrypt-generator.com/](https://bcrypt-generator.com/).
 You should set the roles you want for each key. You can also set an expiration time for each key in seconds using `"expiration"`.
 
 You need to specify a random `secret` under `"secret"`.
+
+You need to specify a hostname (you can leave it blank), and the paths of your key and certificate under `ssl.key` and `ssl.cert`.
 
 As for the database, you need to use MySQL, make a new database (and a user identified with a native MySQL password) and fill the appropriate data under `"db"`. Create a new table using
 ```sql

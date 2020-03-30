@@ -7,8 +7,7 @@
       "roles": ["get", "set"]
     },
     {
-      "hash": "bcrypt of salt + key",
-      "expiration": 3600,
+      "hash": "bcrypt of the salt and the key",
       "roles": ["get"]
     }
   ],
@@ -18,5 +17,10 @@
     "user": "yetzel",
     "password": "ki11_th3_mall!",
     "database": "kea"
+  },
+  "ssl": {
+    "hostname": "downloadmoreram.com",
+    "key": "key.pem",
+    "cert": "certificate.cert"
   }
 }

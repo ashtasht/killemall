@@ -14,6 +14,12 @@ const connRoute = require("./connect.js");
 
 const config = require("../config.json");
 
+const httpsOptions = {
+  hostname: config.hostname,
+  key: fs.readFileSync(config.ssl.key),
+  cert: fs.readFileSync(config.ssl.cert)
+};
+
 const app = new Koa();
 
 app.use(helmet());
@@ -29,8 +35,6 @@ app.use(koaJwt({ secret: config.secret }));
 app.use(mount("/get", getRoute));
 app.use(mount("/set", setRoute));
 
-// Run the server
+// Run the server using https only
 const port = process.env.PORT || 5120;
-app.listen(port);
-//https.createServer(app.callback()).listen(port);
-console.log(`Running on port ${port}`);
+https.createServer(httpsOptions, app.callback()).listen(port);
