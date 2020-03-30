@@ -20,7 +20,7 @@ bcrypt.hash("the_key_i_want", "some_salt_i_generated", (err, hash) => console.lo
 ```
 or with [https://bcrypt-generator.com/](https://bcrypt-generator.com/).
 
-You can set the roles you want for each key.
+You should set the roles you want for each key. You can also set an expiration time for each key in seconds using `"expiration"`.
 
 You need to specify a random `secret` under `"secret"`.
 

@@ -13,7 +13,7 @@ mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch
 
 app.use(async (ctx) => {
   try {
-    if (ctx.state.user.expiration < Date.now() / 1000) {
+    if (ctx.state.user.expiration && ctx.state.user.expiration < Date.now() / 1000) {
       ctx.status = 401;
       return;
     }

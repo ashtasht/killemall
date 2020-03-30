@@ -29,11 +29,12 @@ app.use(async (ctx) => {
   // Find the key used
   for (i = 0; i < v.length; i++) {
     if (v[i]) {
+      var data = new Object();
+      data.roles = config.keys[i].roles;
+      if (config.keys[i].expiration)
+        data.expiration = Math.floor(Date.now() / 1000 + config.keys[i].expiration);
       ctx.body = {
-        token: jsonWebToken.sign({
-          roles: config.keys[i].roles,
-          expiration: Math.floor(Date.now() / 1000 + config.keys[i].expiration)
-          }, config.secret)
+        token: jsonWebToken.sign(data, config.secret)
       };
       return;
     }
