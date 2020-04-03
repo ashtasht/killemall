@@ -32,10 +32,16 @@ app.use(async (ctx) => {
     }
 
     var hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-    const body = aes256.encrypt(ctx.request.body.title, ctx.request.body.body);
 
-    const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
-    await connection.query(q, [{ title: hash, body: body }, body]);
+    if (ctx.request.body.body === "") {
+      const q = "DELETE FROM entries WHERE title = ?;";
+      await connection.query(q, hash);
+    } else {
+      const body = aes256.encrypt(ctx.request.body.title, ctx.request.body.body);
+      
+      const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
+      await connection.query(q, [{ title: hash, body: body }, body]);
+    }
 
     ctx.status = 200;
     return;
