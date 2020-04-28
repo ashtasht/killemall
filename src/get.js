@@ -39,7 +39,7 @@ app.use(async (ctx) => {
     if (!results[0]) {
       ctx.body = { body: "" };
     } else {
-      ctx.body = { body: aes256.decrypt(ctx.request.body.title, results[0].body.toString()) };
+      ctx.body = aes256.decrypt(ctx.request.body.title, results[0].body.toString());
     }
 
     ctx.status = 200;
