@@ -1,5 +1,5 @@
 # killemall
-A simple server for accessing and writing encrypted data only if the title is known. It contains only 145 lines of code!
+A simple server for accessing and writing encrypted data only if the title is known. It contains only 153 lines of code!
 
 ## How it works
 Killemall works by encrypting (AES256) the body of each entry with its original title, and instead of storing the original title in the database - storing the hash (BCrypt) of it. Thus, an entry can be accessed only if the title is already known, and the titles themselves cannot be listed (they are hashed).
@@ -50,7 +50,8 @@ curl -X POST -H "Content-Type: application/json" --data '{"key":"my_key"}' http:
 ```
 ### Setting an entry
 ```bash
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_token>" http://localhost:5120/set --data  '{"title":"<entry_title>","body":"<entry_body>"}'
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_token>" http://localhost:5120/set --data  '{"title":"<entry_title>","body":"<base64_encoded_body>"}'
+(You can encode strings to base64 in bash using `echo Kill the mall | base64`)
 ```
 ### Getting an entry
 ```bash

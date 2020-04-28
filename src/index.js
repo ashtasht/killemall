@@ -2,7 +2,7 @@ const fs = require("fs");
 const https = require("https");
 
 const Koa = require("koa");
-if (process.env.NODE_ENV === "dev") var logger = require("koa-logger");
+var logger; if (process.env.NODE_ENV === "dev") logger = require("koa-logger");
 const mount = require("koa-mount");
 const helmet = require("koa-helmet");
 const koaJwt = require("koa-jwt");
