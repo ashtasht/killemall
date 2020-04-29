@@ -25,8 +25,8 @@ app.use(async (ctx) => {
       return;
     }
 
-    if (!ctx.request.body.title || !ctx.request.body.body) {
-      ctx.body = { "name": "Bad Request", "code": 400, "message": "Title and body were not specified in the query's body." };
+    if (!ctx.request.body.title) {
+      ctx.body = { "name": "Bad Request", "code": 400, "message": "Title was not specified in the query's body." };
       ctx.status = 400;
       return;
     }
