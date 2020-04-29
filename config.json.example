@@ -2,7 +2,7 @@
   "salt": "bcrypt salt",
   "keys": [
     {
-      "hash": "bcrypt the salt and the key",
+      "hash": "bcrypt of the salt and the key",
       "expiration": 900,
       "roles": ["get", "set"]
     },
@@ -11,14 +11,9 @@
       "roles": ["get"]
     }
   ],
-  "secret": "I have a crush on Cortana",
-  "db": {
-    "host": "localhost",
-    "user": "yetzel",
-    "password": "ki11_th3_mall!",
-    "database": "kea"
-  },
-  "hostname": "downloadmoreram.com",
+  "secret": "(I_have_a_crush_on_Cortana)",
+  "data": "./data",
+  "hostname": "hostname.com",
   "ssl": {
     "ssl": true,
     "key": "key.pem",

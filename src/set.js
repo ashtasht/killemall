@@ -1,19 +1,15 @@
 const Koa = require("koa");
 const bcrypt = require("bcrypt");
-const aes256 = require("aes256");
-const mysql = require("promise-mysql");
-const atob = require("atob");
+const crypto = require("crypto");
+const fs = require("fs");
 
 const config = require("../config.json");
 
 const app = new Koa();
 
-// Connect to the database
-var connection;
-mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch((err) => console.log(`Error establishing connection to the database:\n${err}`));
-
 app.use(async (ctx) => {
   try {
+    // Request validation
     if (ctx.state.user.expiration && ctx.state.user.expiration < Date.now() / 1000) {
       ctx.body = { "name": "Unauthorized", "code": 401, "message": "Token expired." };
       ctx.status = 401;
@@ -32,17 +28,23 @@ app.use(async (ctx) => {
       return;
     }
 
-    var hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-    const raw = atob(ctx.request.body.body, "base64");
+    // Calculate the hash
+    let hash = await bcrypt.hash(ctx.request.body.title, config.salt);
+    const filename = `${config.data}/${Buffer.from(hash).toString("base64")}.0`;
 
     if (ctx.request.body.body === "") {
-      const q = "DELETE FROM entries WHERE title = ?;";
-      await connection.query(q, hash);
+      fs.unlink(filename, (err) => { if (process.env.NODE_ENV === "dev") console.log(err) });
+
     } else {
-      const body = aes256.encrypt(ctx.request.body.title, raw);
-      
-      const q = "INSERT INTO entries SET ? ON DUPLICATE KEY UPDATE body = ?;";
-      await connection.query(q, [{ title: hash, body: body }, body]);
+      const raw = Buffer.from(ctx.request.body.body, "base64");
+      console.log(raw.toString('base64'))
+
+      const iv = crypto.randomBytes(16);
+      const key = hash.substr(0, 32);
+
+      const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+      const enc = Buffer.concat([iv, cipher.update(raw), cipher.final()]);
+      fs.writeFile(filename, enc, (err) => { if (process.env.NODE_ENV === "dev") console.log(err) });
     }
 
     ctx.status = 200;

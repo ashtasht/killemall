@@ -1,16 +1,11 @@
+const fs = require("fs");
 const Koa = require("koa");
 const bcrypt = require("bcrypt");
-const aes256 = require("aes256");
-const mysql = require("promise-mysql");
-const btoa = require("btoa");
+const crypto = require("crypto");
 
 const config = require("../config.json");
 
 const app = new Koa();
-
-// Connect to the database
-var connection;
-mysql.createConnection(config.db).then((c) => { connection = c; return; }).catch((err) => console.log(`Error establishing connection to the database:\n${err}`));
 
 app.use(async (ctx) => {
   try {
@@ -32,17 +27,24 @@ app.use(async (ctx) => {
       return;
     }
 
-    var hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-      
-    const q = "SELECT body FROM entries WHERE title = ?";
-    const results = await connection.query(q, hash);
+    // Calculate the hash
+    let hash = await bcrypt.hash(ctx.request.body.title, config.salt);
+    const filename = `${config.data}/${Buffer.from(hash).toString("base64")}.0`;
 
-    if (!results[0]) {
+    if (!fs.existsSync(filename)) {
       ctx.body = "";
     } else {
-      ctx.body = btoa(aes256.decrypt(ctx.request.body.title, results[0].body.toString()));
-    }
+      const enc = fs.readFileSync(filename);
 
+      const iv = enc.slice(0, 16);
+      const key = hash.substr(0, 32);
+      
+      const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+      const raw = Buffer.concat([decipher.update(enc.slice(16)), decipher.final()]);
+      console.log(raw.toString('base64'))
+      ctx.body = raw.toString('base64');
+    }
+      
     ctx.status = 200;
     ctx.type = "application/base64"; 
     return;
