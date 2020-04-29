@@ -39,10 +39,11 @@ app.use(async (ctx) => {
     if (!results[0]) {
       ctx.body = { body: "" };
     } else {
-      ctx.body = aes256.decrypt(ctx.request.body.title, results[0].body.toString());
+      ctx.body = Buffer.from(aes256.decrypt(ctx.request.body.title, results[0].body.toString())).toString('base64');
     }
 
     ctx.status = 200;
+    ctx.type = "application/base64"; 
     return;
   } catch (e) {
     if (process.env.NODE_ENV === "dev") console.log(e);
