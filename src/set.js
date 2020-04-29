@@ -33,7 +33,7 @@ app.use(async (ctx) => {
     }
 
     var hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-    const raw = atob(ctx.request.body.body, "base64");
+    const raw = atob(ctx.request.body.body);
 
     if (ctx.request.body.body === "") {
       const q = "DELETE FROM entries WHERE title = ?;";
