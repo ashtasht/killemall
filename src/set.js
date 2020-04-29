@@ -37,7 +37,6 @@ app.use(async (ctx) => {
 
     } else {
       const raw = Buffer.from(ctx.request.body.body, "base64");
-      console.log(raw.toString('base64'))
 
       const iv = crypto.randomBytes(16);
       const key = hash.substr(0, 32);
