@@ -38,7 +38,7 @@ app.use(async (ctx) => {
     const results = await connection.query(q, hash);
 
     if (!results[0]) {
-      ctx.body = { body: "" };
+      ctx.body = "";
     } else {
       ctx.body = btoa(aes256.decrypt(ctx.request.body.title, results[0].body.toString()));
     }
