@@ -2,6 +2,7 @@ const Koa = require("koa");
 const bcrypt = require("bcrypt");
 const aes256 = require("aes256");
 const mysql = require("promise-mysql");
+const atob = require("atob");
 
 const config = require("../config.json");
 
@@ -32,7 +33,7 @@ app.use(async (ctx) => {
     }
 
     var hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-    const raw = Buffer.from(ctx.request.body.body, "base64").toString();
+    const raw = atob(ctx.request.body.body, "base64");
 
     if (ctx.request.body.body === "") {
       const q = "DELETE FROM entries WHERE title = ?;";

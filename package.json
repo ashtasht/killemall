@@ -19,7 +19,9 @@
   "homepage": "https://github.com/AmitGoren/killemall#readme",
   "dependencies": {
     "aes256": "^1.0.4",
+    "atob": "^2.1.2",
     "bcrypt": "^4.0.1",
+    "btoa": "^1.2.1",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-helmet": "^5.2.0",

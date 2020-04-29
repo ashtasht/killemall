@@ -2,6 +2,7 @@ const Koa = require("koa");
 const bcrypt = require("bcrypt");
 const aes256 = require("aes256");
 const mysql = require("promise-mysql");
+const btoa = require("btoa");
 
 const config = require("../config.json");
 
@@ -39,7 +40,7 @@ app.use(async (ctx) => {
     if (!results[0]) {
       ctx.body = { body: "" };
     } else {
-      ctx.body = Buffer.from(aes256.decrypt(ctx.request.body.title, results[0].body.toString())).toString('base64');
+      ctx.body = btoa(aes256.decrypt(ctx.request.body.title, results[0].body.toString()));
     }
 
     ctx.status = 200;
