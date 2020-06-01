@@ -1,6 +1,6 @@
 {
   "name": "killemall",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A simple server for accessing and writing encrypted data only if the title is known.",
   "main": "src/index.js",
   "scripts": {
@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/AmitGoren/killemall#readme",
   "dependencies": {
-    "bcrypt": "^4.0.1",
+    "argon2": "^0.26.2",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-helmet": "^5.2.0",
     "koa-jwt": "^3.6.0",
     "koa-logger": "^3.2.1",
-    "koa-mount": "^4.0.0"
+    "koa-mount": "^4.0.0",
+    "url-safe-base64": "^1.1.1"
   }
 }

@@ -1,7 +1,8 @@
-const fs = require("fs");
 const Koa = require("koa");
-const bcrypt = require("bcrypt");
+const fs = require("fs");
 const crypto = require("crypto");
+const argon2 = require("argon2");
+const base64uri = require("url-safe-base64")
 
 const config = require("../config.json");
 
@@ -9,27 +10,29 @@ const app = new Koa();
 
 app.use(async (ctx) => {
   try {
-    if (ctx.state.user.expiration && ctx.state.user.expiration < Date.now() / 1000) {
-      ctx.body = { "name": "Unauthorized", "code": 401, "message": "Token expired." };
-      ctx.status = 401;
-      return;
-    }
+    // Calculate the hash for the filename
+    let filename_hash = await argon2.hash(ctx.request.body.title, {
+        hashLength: config.filename_hash.length,
+        timeCost: config.filename_hash.time,
+        memoryCost: config.filename_hash.memory,
+        parallelism: 2,
+        type: argon2.argon2id,
+        raw: true,
+        salt: Buffer.from(config.filename_hash.salt)
+      });
 
-    if (!ctx.state.user.roles.includes("get")) {
-      ctx.body = { "name": "Forbidden", "code": 403, "message": "Access deniend to role 'get'." };
-      ctx.status = 403;
-      return;
-    }
+    const filename = `${config.data}/${base64uri.encode(Buffer.from(filename_hash).toString("base64"))}.0`;
 
-    if (!ctx.request.body.title) {
-      ctx.body = { "name": "Bad Request", "code": 400, "message": "Title was not specified in the query's body." };
-      ctx.status = 400;
-      return;
-    }
-
-    // Calculate the hash
-    let hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-    const filename = `${config.data}/${Buffer.from(hash).toString("base64")}.0`;
+    // Calculate the hash for the AES256 key
+    let data_hash = await argon2.hash(ctx.request.body.title, { raw: true, salt: config.data_hash.salt, 
+        hashLength: 32,
+        timeCost: config.data_hash.time,
+        memoryCost: config.data_hash.memory,
+        parallelism: 2,
+        type: argon2.argon2id,
+        raw: true,
+        salt: Buffer.from(config.data_hash.salt)
+      });
 
     if (!fs.existsSync(filename)) {
       ctx.body = "";
@@ -37,11 +40,9 @@ app.use(async (ctx) => {
       const enc = fs.readFileSync(filename);
 
       const iv = enc.slice(0, 16);
-      const key = hash.substr(0, 32);
       
-      const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+      const decipher = crypto.createDecipheriv("aes-256-cbc", data_hash, iv);
       const raw = Buffer.concat([decipher.update(enc.slice(16)), decipher.final()]);
-      console.log(raw.toString('base64'))
       ctx.body = raw.toString('base64');
     }
       

@@ -1,6 +1,6 @@
 const Koa = require("koa");
 const jsonWebToken = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const argon2 = require("argon2");
 
 const config = require("../config.json");
 
@@ -16,7 +16,7 @@ app.use(async (ctx) => {
 
   for (var i = 0; i < config.keys.length; i++) {
     try {
-      promises.push(bcrypt.compareSync(ctx.request.body.key, config.keys[i].hash));
+      promises.push(argon2.verify(config.keys[i].hash, ctx.request.body.key));
     } catch {
       promises.push(null);
 

@@ -1,7 +1,8 @@
 const Koa = require("koa");
-const bcrypt = require("bcrypt");
-const crypto = require("crypto");
 const fs = require("fs");
+const crypto = require("crypto");
+const argon2 = require("argon2");
+const base64uri = require("url-safe-base64")
 
 const config = require("../config.json");
 
@@ -28,20 +29,38 @@ app.use(async (ctx) => {
       return;
     }
 
-    // Calculate the hash
-    let hash = await bcrypt.hash(ctx.request.body.title, config.salt);
-    const filename = `${config.data}/${Buffer.from(hash).toString("base64")}.0`;
+    // Calculate the hash for the filename
+    let filename_hash = await argon2.hash(ctx.request.body.title, {
+        hashLength: config.filename_hash.length,
+        timeCost: config.filename_hash.time,
+        memoryCost: config.filename_hash.memory,
+        parallelism: 2,
+        type: argon2.argon2id,
+        raw: true,
+        salt: Buffer.from(config.filename_hash.salt)
+      });
+
+    const filename = `${config.data}/${base64uri.encode(Buffer.from(filename_hash).toString("base64"))}.0`;
+    
+    // Calculate the hash for the AES256 key
+    let data_hash = await argon2.hash(ctx.request.body.title, { raw: true, salt: config.data_hash.salt, 
+        hashLength: 32,
+        timeCost: config.data_hash.time,
+        memoryCost: config.data_hash.memory,
+        parallelism: 2,
+        type: argon2.argon2id,
+        raw: true,
+        salt: Buffer.from(config.data_hash.salt)
+      });
 
     if (ctx.request.body.body === "") {
       fs.unlink(filename, (err) => { if (process.env.NODE_ENV === "dev") console.log(err) });
-
     } else {
       const raw = Buffer.from(ctx.request.body.body, "base64");
 
       const iv = crypto.randomBytes(16);
-      const key = hash.substr(0, 32);
 
-      const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+      const cipher = crypto.createCipheriv('aes-256-cbc', data_hash, iv);
       const enc = Buffer.concat([iv, cipher.update(raw), cipher.final()]);
       fs.writeFile(filename, enc, (err) => { if (process.env.NODE_ENV === "dev") console.log(err) });
     }
