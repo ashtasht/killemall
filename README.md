@@ -44,14 +44,15 @@ curl -X POST -H "Content-Type: application/json" --data '{"key":"my_key"}' http:
 ```bash
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_token>" http://localhost:5120/set --data  '{"title":"<entry_title>","body":"<base64_encoded_body>"}'
 ```
-You can encode strings to base64 in bash using `echo Kill the mall | base64 -w0`
+You can encode strings to base64 in bash using `echo Kill the mall | base64 -w0`.
 
 ### Getting an entry
 ```bash
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_token>" http://localhost:5120/get --data '{"title":"<entry_title>"}'
-(You can decode the base64 decoded data using `echo VGhlIEZvdXIgSG9yc2VtYW4K | base64 -d`
 ```
-## A Few More Things
- - This project is a hobby, so it might have security leaks which I'm unaware of.
- - Killemall uses port 5120 by defualt, you can change it by setting the `PORT` enviroment variable.
- - Yes, "Killemall" and 5120 is a reference to Metallica.
+You can decode the base64 decoded data using `echo VGhlIEZvdXIgSG9yc2VtYW4K | base64 -d` (replace `VGh...` with the base64).
+
+## A few more things
+- This project is a hobby, so it might have security leaks which I'm unaware of.
+- Killemall uses port 5120 by defualt, you can change it by setting the `PORT` enviroment variable.
+- Yes, "Killemall" and 5120 is a reference to Metallica.
