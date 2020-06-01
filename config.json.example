@@ -1,22 +1,32 @@
 {
-  "salt": "bcrypt salt",
+  "filename_hash": {
+    "length": 64,
+    "time": 6,
+    "memory": 4096,
+    "salt": "randomly generated salt"
+  },
+  "data_hash": {
+    "time": 6,
+    "memory": 4096,
+    "salt": "another DIFFERENT salt"
+  },
   "keys": [
     {
-      "hash": "bcrypt of the salt and the key",
-      "expiration": 900,
+      "hash": "argon2 hash",
+      "expiration": 300,
       "roles": ["get", "set"]
     },
     {
-      "hash": "bcrypt of the salt and the key",
+      "hash": "$argon2i$v=19$m=4096,t=3,p=1$f0FDtIGoyjsWQSv+hKUolg$0KobpwF5gzPTptyLUBr5336mvlcqXkzb2VOarAHSUwA",
       "roles": ["get"]
     }
   ],
-  "secret": "(I_have_a_crush_on_Cortana)",
-  "data": "./data",
-  "hostname": "hostname.com",
+  "secret": "it_should_have_been_called_Metal_Up_Your_Ass",
+  "data": "/home/mustaine/killemall_data",
   "ssl": {
+    "hostname": "",
     "ssl": true,
-    "key": "key.pem",
-    "cert": "certificate.cert"
+    "key": "../ssl/client-key.pem",
+    "cert": "../ssl/client-cert.pem"
   }
 }
