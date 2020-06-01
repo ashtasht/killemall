@@ -52,7 +52,7 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <my_t
 ```
 You can decode the base64 decoded data using `echo VGhlIEZvdXIgSG9yc2VtYW4K | base64 -d` (replace `VGh...` with the base64).
 
-## A Few More Things
+## A few more things
 - This project is a hobby, so it might have security leaks which I'm unaware of.
 - Killemall uses port 5120 by defualt, you can change it by setting the `PORT` enviroment variable.
 - Yes, "Killemall" and 5120 is a reference to Metallica.
