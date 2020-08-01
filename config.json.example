@@ -1,32 +1,32 @@
 {
-  "filename_hash": {
-    "length": 64,
-    "time": 6,
-    "memory": 4096,
-    "salt": "randomly generated salt"
-  },
-  "data_hash": {
-    "time": 6,
-    "memory": 4096,
-    "salt": "another DIFFERENT salt"
-  },
-  "keys": [
-    {
-      "hash": "argon2 hash",
-      "expiration": 300,
-      "roles": ["get", "set"]
-    },
-    {
-      "hash": "$argon2i$v=19$m=4096,t=3,p=1$f0FDtIGoyjsWQSv+hKUolg$0KobpwF5gzPTptyLUBr5336mvlcqXkzb2VOarAHSUwA",
-      "roles": ["get"]
-    }
-  ],
-  "secret": "it_should_have_been_called_Metal_Up_Your_Ass",
-  "data": "/home/mustaine/killemall_data",
-  "ssl": {
-    "hostname": "",
-    "ssl": true,
-    "key": "../ssl/client-key.pem",
-    "cert": "../ssl/client-cert.pem"
-  }
+	"filename_hash": {
+		"length": 64,
+		"time": 6,
+		"memory": 4096,
+		"salt": "randomly generated salt"
+	},
+	"data_hash": {
+		"time": 6,
+		"memory": 4096,
+		"salt": "another DIFFERENT salt"
+	},
+	"keys": [
+		{
+			"hash": "pbkdf2 hash",
+			"expiration": 300,
+			"roles": ["get", "set"]
+		},
+		{
+			"hash": "$argon2i$v=19$m=4096,t=3,p=1$f0FDtIGoyjsWQSv+hKUolg$0KobpwF5gzPTptyLUBr5336mvlcqXkzb2VOarAHSUwA",
+			"roles": ["get"]
+		}
+	],
+	"secret": "it_should_have_been_called_Metal_Up_Your_Ass",
+	"data": "/home/mustaine/killemall_data",
+	"ssl": {
+		"hostname": "",
+		"ssl": true,
+		"key": "../ssl/client-key.pem",
+		"cert": "../ssl/client-cert.pem"
+	}
 }

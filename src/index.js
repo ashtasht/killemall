@@ -15,10 +15,10 @@ const config = require("../config.json");
 
 var httpsOptions;
 if (config.ssl.ssl)
-  httpsOptions = {
-    key: fs.readFileSync(config.ssl.key),
-    cert: fs.readFileSync(config.ssl.cert)
-  };
+	httpsOptions = {
+		key: fs.readFileSync(config.ssl.key),
+		cert: fs.readFileSync(config.ssl.cert)
+	};
 
 const app = new Koa();
 
