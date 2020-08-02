@@ -1,0 +1,35 @@
+{
+	"filename_hash": {
+		"salt": "randomly generated salt",
+		"iterations": 2097152,
+		"length": 64
+	},
+	"data_hash": {
+		"salt": "another DIFFERENT salt",
+		"iterations": 2097152
+	},
+	"key_hash": {
+		"salt": "another salt",
+		"iterations": 2097152,
+		"length": 64
+	},
+	"keys": [
+		{
+			"hash": "pbkdf2 hash",
+			"expiration": 300,
+			"roles": ["get", "set"]
+		},
+		{
+			"hash": "pbkdf2 hash",
+			"roles": ["get"]
+		}
+	],
+	"secret": "it_should_have_been_called_Metal_Up_Your_Ass",
+	"data": "/home/mustaine/killemall_data",
+	"ssl": {
+		"hostname": "",
+		"ssl": true,
+		"key": "../ssl/client-key.pem",
+		"cert": "../ssl/client-cert.pem"
+	}
+}

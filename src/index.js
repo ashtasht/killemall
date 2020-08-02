@@ -1,7 +1,8 @@
 const fs = require("fs");
 const https = require("https");
 const Koa = require("koa");
-var logger; if (process.env.NODE_ENV === "dev") logger = require("koa-logger");
+if (process.env.NODE_ENV === "dev")
+	var logger = require("koa-logger");
 const mount = require("koa-mount");
 const helmet = require("koa-helmet");
 const koaJwt = require("koa-jwt");
@@ -15,16 +16,17 @@ const config = require("../config.json");
 
 var httpsOptions;
 if (config.ssl.ssl)
-  httpsOptions = {
-    key: fs.readFileSync(config.ssl.key),
-    cert: fs.readFileSync(config.ssl.cert)
-  };
+	httpsOptions = {
+		key: fs.readFileSync(config.ssl.key),
+		cert: fs.readFileSync(config.ssl.cert)
+	};
 
 const app = new Koa();
 
-app.use(helmet());
+if (process.env.NODE_ENV === "dev")
+	app.use(logger());
 
-if (process.env.NODE_ENV === "dev") app.use(logger());
+app.use(helmet());
 
 app.use(koaBody());
 
@@ -38,5 +40,8 @@ app.use(mount("/set", setRoute));
 // Run the server using https only
 const port = process.env.PORT || 5120;
 console.log(`Running on ${config.hostname}:${port}`);
-if (config.ssl.ssl) https.createServer(httpsOptions, app.callback()).listen(port, config.hostname); // https
-else app.listen(port, config.hostname); // http
+if (config.ssl.ssl) // https
+	https.createServer(httpsOptions, app.callback())
+		.listen(port, config.hostname);
+else // http
+	app.listen(port, config.hostname);
