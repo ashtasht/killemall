@@ -13,48 +13,38 @@ app.use(async (ctx) => {
 		return;
 	}
 
-	var promises = [];
-
-	for (var i = 0; i < config.keys.length; i++) {
-		try {
-			promises.push(pbkdf2(ctx.request.body.key,
-				config.key_hash.salt,
-				config.key_hash.iterations,
-				config.key_hash.length,
-				true
-			));
-		} catch {
-			promises.push(null);
-
-			ctx.status = 500;
-
-			ctx.body = {
-				"name": "Internal Server Error",
-				"code": 500,
-				"message": "Cannot calculate the hash of a key."
-			};
-			
-			return;
-		}
-	}
+	try {
+		key_hash = await pbkdf2(ctx.request.body.key,
+			config.key_hash.salt,
+			config.key_hash.iterations,
+			config.key_hash.length,
+			true);
 	
-	// Calculate all the keys
-	var v = await Promise.all(promises);
-
-	// Find the key used
-	for (i = 0; i < v.length; i++) {
-		if (v[i] == config.keys[i].hash) {
-			var data = new Object();
-			data.roles = config.keys[i].roles;
-			if (config.keys[i].expiration)
-				data.expiration = Math.floor(
-					Date.now() / 1000 + config.keys[i].expiration
-				);
-			ctx.body = {
-				token: jsonWebToken.sign(data, config.secret)
-			};
-			return;
+		// Find the key used
+		for (i = 0; i < config.keys.length; i++) {
+			if (key_hash == config.keys[i].hash) {
+				var data = new Object();
+				data.roles = config.keys[i].roles;
+				if (config.keys[i].expiration)
+					data.expiration = Math.floor(
+						Date.now() / 1000 + config.keys[i].expiration
+					);
+				ctx.body = {
+					token: jsonWebToken.sign(data, config.secret)
+				};
+				return;
+			}
 		}
+	} catch {
+		ctx.status = 500;
+	
+		ctx.body = {
+			"name": "Internal Server Error",
+			"code": 500,
+			"message": "Cannot calculate the hash of a key."
+		};
+		
+		return;
 	}
 
 	// Invalid key
