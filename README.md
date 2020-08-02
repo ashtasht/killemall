@@ -1,5 +1,5 @@
 # killemall
-A simple server for accessing and writing encrypted data only if the title is known. It contains only 219 lines of code!
+A simple server for accessing and writing encrypted data only if the title is known. It contains only 211 lines of code!
 
 ## How it works
 Killemall works by encrypting (AES256) the body of each new entry with a hash (PBKDF2) of the original entry title as the key. But the original title isn't stored (only its hash, with a differnt salt). It means that an entry can be accessed only if the title is already known, yet the titles themselves are inaccessible (they are hashed).
