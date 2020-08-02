@@ -18,8 +18,7 @@
 	},
 	"homepage": "https://github.com/AmitGoren/killemall#readme",
 	"dependencies": {
-		"argon2": "^0.26.2",
-		"koa": "^2.11.0",
+		"koa": "^2.13.0",
 		"koa-body": "^4.2.0",
 		"koa-helmet": "^5.2.0",
 		"koa-jwt": "^4.0.0",

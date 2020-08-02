@@ -1,8 +1,9 @@
 const Koa = require("koa");
 const fs = require("fs");
 const crypto = require("crypto");
-const argon2 = require("argon2");
 const base64uri = require("url-safe-base64")
+
+const pbkdf2 = require("./pbkdf2");
 
 const config = require("../config.json");
 
@@ -11,28 +12,21 @@ const app = new Koa();
 app.use(async (ctx) => {
 	try {
 		// Calculate the hash for the filename
-		let filename_hash = await argon2.hash(ctx.request.body.title, {
-				hashLength: config.filename_hash.length,
-				timeCost: config.filename_hash.time,
-				memoryCost: config.filename_hash.memory,
-				parallelism: 2,
-				type: argon2.argon2id,
-				raw: true,
-				salt: Buffer.from(config.filename_hash.salt)
-			});
+		var filename_hash = await pbkdf2(ctx.request.body.title,
+			config.filename_hash.salt,
+			config.filename_hash.iterations,
+			config.filename_hash.length,
+			true);
 
-		const filename = `${config.data}/${base64uri.encode(Buffer.from(filename_hash).toString("base64"))}.0`;
+		const filename =
+			`${config.data}/${base64uri.encode(filename_hash)}.0`;
 
 		// Calculate the hash for the AES256 key
-		let data_hash = await argon2.hash(ctx.request.body.title, { raw: true, salt: config.data_hash.salt, 
-				hashLength: 32,
-				timeCost: config.data_hash.time,
-				memoryCost: config.data_hash.memory,
-				parallelism: 2,
-				type: argon2.argon2id,
-				raw: true,
-				salt: Buffer.from(config.data_hash.salt)
-			});
+		var data_hash = await pbkdf2(ctx.request.body.title,
+			config.data_hash.salt,
+			config.data_hash.iterations,
+			32,
+			false);
 
 		if (!fs.existsSync(filename)) {
 			ctx.body = "";
@@ -43,16 +37,23 @@ app.use(async (ctx) => {
 			
 			const decipher = crypto.createDecipheriv("aes-256-cbc", data_hash, iv);
 			const raw = Buffer.concat([decipher.update(enc.slice(16)), decipher.final()]);
-			ctx.body = raw.toString('base64');
+			ctx.body = raw.toString("base64");
 		}
 			
-		ctx.status = 200;
 		ctx.type = "application/base64"; 
-		return;
+
+		ctx.status = 200;
 	} catch (e) {
-		if (process.env.NODE_ENV === "dev") console.log(e);
-		ctx.body = { "name": "Internal Server Error", "code": 500, "message": "Internal server error." };
+		if (process.env.NODE_ENV === "dev")
+			console.log(e);
+
 		ctx.status = 500;
+
+		ctx.body = {
+			"name": "Internal Server Error",
+			"code": 500,
+			"message": "Internal server error."
+		};
 	}
 });
 

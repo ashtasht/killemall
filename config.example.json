@@ -1,14 +1,17 @@
 {
 	"filename_hash": {
-		"length": 64,
-		"time": 6,
-		"memory": 4096,
-		"salt": "randomly generated salt"
+		"salt": "randomly generated salt",
+		"iterations": 2097152,
+		"length": 64
 	},
 	"data_hash": {
-		"time": 6,
-		"memory": 4096,
-		"salt": "another DIFFERENT salt"
+		"salt": "another DIFFERENT salt",
+		"iterations": 2097152
+	},
+	"key_hash": {
+		"salt": "another salt",
+		"iterations": 2097152,
+		"length": 64
 	},
 	"keys": [
 		{
@@ -17,7 +20,7 @@
 			"roles": ["get", "set"]
 		},
 		{
-			"hash": "$argon2i$v=19$m=4096,t=3,p=1$f0FDtIGoyjsWQSv+hKUolg$0KobpwF5gzPTptyLUBr5336mvlcqXkzb2VOarAHSUwA",
+			"hash": "pbkdf2 hash",
 			"roles": ["get"]
 		}
 	],
