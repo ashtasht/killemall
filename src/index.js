@@ -37,7 +37,7 @@ app.use(koaJwt({ secret: config.secret }));
 app.use(mount("/get", getRoute));
 app.use(mount("/set", setRoute));
 
-// Run the server using https only
+// Run the server
 const port = process.env.PORT || 5120;
 console.log(`Running on ${config.hostname}:${port}`);
 if (config.ssl.ssl) // https

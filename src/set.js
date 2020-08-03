@@ -48,23 +48,24 @@ app.use(async (ctx) => {
 			return;
 		}
 
-		// Calculate the hash for the filename
-		var filename_hash = await pbkdf2(ctx.request.body.title,
-			config.filename_hash.salt,
-			config.filename_hash.iterations,
-			config.filename_hash.length,
-			true);
+		// Calculate the hash for the filename and for the AES256 key
+		var promises = [
+			pbkdf2(ctx.request.body.title,
+				config.filename_hash.salt,
+				config.filename_hash.iterations,
+				config.filename_hash.length,
+				true),
+			pbkdf2(ctx.request.body.title,
+				config.data_hash.salt,
+				config.data_hash.iterations,
+				32,
+				false)
+		];
 
-		const filename =
-			`${config.data}/${base64uri.encode(filename_hash)}.0`;
+		var hashes = await Promise.all(promises);
+
+		const filename = `${config.data}/${base64uri.encode(hashes[0])}.0`;
 		
-		// Calculate the hash for the AES256 key
-		var data_hash = await pbkdf2(ctx.request.body.title,
-			config.data_hash.salt,
-			config.data_hash.iterations,
-			32,
-			false);
-
 		if (ctx.request.body.body === "") {
 			fs.unlink(filename, (err) => { if (process.env.NODE_ENV === "dev") console.log(err) });
 		} else {
@@ -72,7 +73,7 @@ app.use(async (ctx) => {
 
 			const iv = crypto.randomBytes(16);
 
-			const cipher = crypto.createCipheriv("aes-256-cbc", data_hash, iv);
+			const cipher = crypto.createCipheriv("aes-256-cbc", hashes[1], iv);
 			const enc = Buffer.concat([iv, cipher.update(raw), cipher.final()]);
 			fs.writeFile(filename, enc, (err) => { if (process.env.NODE_ENV === "dev") console.log(err) });
 		}
