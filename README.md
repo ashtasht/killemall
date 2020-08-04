@@ -39,6 +39,8 @@ If you want to use SSL (and you really should), set `ssl.ssl` to true and, the p
 
 Now you can run the server using `pm2 start`, `npm start` or `node src/index.js`.
 ## Usage with cURL
+See this as an example for how to use the server, of course all the things shown here also apply outside of cURL.
+
 ### Getting a token
 Killemall uses JWT, so in order to get a token with cURL you need to run the following command:
 ```bash
